@@ -15,7 +15,7 @@ Deploy, manage, and attest applications running inside EigenCompute TEE (Trusted
 ## Prerequisites
 
 ```bash
-npm install -g @layr-labs/ecloud-cli  # minimum v0.4.3
+npm install -g @layr-labs/ecloud-cli@latest  # minimum v0.4.3
 ecloud auth login
 ecloud auth whoami
 ```

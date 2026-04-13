@@ -14,7 +14,7 @@ Deploy apps to EigenCompute's Trusted Execution Environment (TEE) with one comma
 
 ## Setup
 
-**Requires:** `npm install -g @layr-labs/ecloud-cli` (minimum **v0.4.3** — older versions have broken attestation)
+**Requires:** `npm install -g @layr-labs/ecloud-cli@latest` (minimum **v0.4.3** — older versions have broken attestation)
 
 ```bash
 ecloud auth login
