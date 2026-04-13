@@ -1,0 +1,12 @@
+.env
+.env.deploy
+.DS_Store
+node_modules/
+.git/
+.claude/
+.dockerignore
+Dockerfile
+entrypoint.sh
+DEPLOY.md
+server.js
+ui/
