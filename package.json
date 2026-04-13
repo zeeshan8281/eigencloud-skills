@@ -1,6 +1,6 @@
 {
     "name": "eigen-skills",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "Deploy and manage apps on EigenCompute TEE — trusted execution environments with hardware-level isolation, encrypted secrets, and attestation",
     "main": "index.js",
     "agents": {
