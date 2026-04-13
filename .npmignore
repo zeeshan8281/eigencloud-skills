@@ -10,3 +10,6 @@ entrypoint.sh
 DEPLOY.md
 server.js
 ui/
+eigen-mcp/
+scripts/test-mcp.js
+mcp.js

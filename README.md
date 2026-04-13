@@ -139,6 +139,16 @@ mkdir -p .claude/skills/eigen
 curl -o .claude/skills/eigen/SKILL.md https://raw.githubusercontent.com/zeeshan8281/eigen-agent-skills/main/SKILL.md
 ```
 
+### As an MCP Server (Claude Desktop, Cursor, Windsurf, Claude Code)
+
+Install the separate [`eigen-mcp`](https://www.npmjs.com/package/eigen-mcp) package for MCP support — all 21 tools, no SKILL.md files or curl needed:
+
+```bash
+npm install -g eigen-mcp
+```
+
+See the [eigen-mcp README](https://www.npmjs.com/package/eigen-mcp) for config examples for Claude Desktop, Cursor, Windsurf, and Claude Code.
+
 ### For Programmatic Use (JavaScript)
 
 ```javascript
