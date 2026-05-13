@@ -217,12 +217,14 @@ footer a:hover{color:var(--fg2)}
         <span class="term-line" data-copy="npm install -g eigen-skills">$ npm install -g eigen-skills</span>
       </div>
       <div class="term-pane" data-pane="mcp">
-        <span class="term-line" data-copy='{"mcpServers":{"eigencompute":{"command":"eigen-mcp"}}}'>{
+        <pre class="term-line" style="white-space:pre;text-align:left;cursor:pointer" data-copy='{"mcpServers":{"eigencompute":{"command":"eigen-mcp"}}}'>{
   "mcpServers": {
-    "eigencompute": { "command": "eigen-mcp" }
+    "eigencompute": {
+      "command": "eigen-mcp"
+    }
   }
-}</span>
-        <div style="font-size:11px;color:var(--dim);margin-top:0.5rem;padding:0 0.75rem">Add to ~/.cursor/mcp.json or claude_desktop_config.json</div>
+}</pre>
+        <div style="font-size:11px;color:var(--dim);margin-top:0.75rem;text-align:center">Add to <code style="background:var(--glow);padding:2px 6px;border-radius:4px">~/.cursor/mcp.json</code> or <code style="background:var(--glow);padding:2px 6px;border-radius:4px">claude_desktop_config.json</code></div>
       </div>
       <div class="term-pane" data-pane="prompt">
         <span class="term-line" data-copy="Read https://eigencloud-skills.vercel.app/ and deploy my app to eigencompute">"Read https://eigencloud-skills.vercel.app/ and deploy my app to eigencompute"</span>
