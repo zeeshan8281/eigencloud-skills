@@ -1,343 +1,339 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>eigen-skills — EigenCompute MCP Server</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EigenCloud Skills — TEE Deployment for AI Agents</title>
+<meta name="description" content="Deploy apps to hardware-isolated TEEs on EigenCloud. Encrypted memory, sealed secrets, cryptographic attestation.">
+<style>
+@font-face {
+  font-family: 'ABC Repro';
+  src: url('assets/fonts/ABCReproVariable-Trial.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ABC Repro Mono';
+  src: url('assets/fonts/ABCReproMonoVariable-Trial.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
 
-    :root {
-      --bg: #0a0a0f;
-      --surface: #12121a;
-      --surface2: #1a1a25;
-      --border: #2a2a3a;
-      --text: #e8e8f0;
-      --text2: #8888a0;
-      --accent: #6366f1;
-      --accent2: #818cf8;
-      --green: #22c55e;
-    }
+*{margin:0;padding:0;box-sizing:border-box}
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      line-height: 1.6;
-    }
+[data-theme="dark"]{
+  --bg:#000000;--bg2:#050211;--surface:#0D0826;--surface2:#140E33;
+  --fg:#FFFFFF;--fg2:#D8DCE5;--dim:#666F7C;
+  --accent:#1A0C6D;--accent-fg:#B8AEE0;--accent-bright:#6B5CE7;
+  --border:rgba(149,191,255,0.12);--border2:rgba(149,191,255,0.06);
+  --glow:rgba(149,191,255,0.08);
+  --nav-bg:rgba(0,0,0,0.85);
+  --ascii-color:#4A38B5;
+  --ascii-glow:0 0 10px rgba(74,56,181,0.6), 0 0 30px rgba(74,56,181,0.3), 0 0 60px rgba(74,56,181,0.15);
+}
 
-    .container { max-width: 900px; margin: 0 auto; padding: 60px 24px; }
+[data-theme="light"]{
+  --bg:#FAFAFF;--bg2:#F3F1FA;--surface:#FFFFFF;--surface2:#EBE8F5;
+  --fg:#16102A;--fg2:#3A3456;--dim:#7A7290;
+  --accent:#1A0C6D;--accent-fg:#1A0C6D;--accent-bright:#1A0C6D;
+  --border:rgba(26,12,109,0.15);--border2:rgba(26,12,109,0.08);
+  --glow:rgba(26,12,109,0.04);
+  --nav-bg:rgba(250,250,255,0.9);
+  --ascii-color:#1A0C6D;
+  --ascii-glow:none;
+}
 
-    header { text-align: center; margin-bottom: 60px; }
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--fg);
+  font-family:'ABC Repro','Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:15px;line-height:1.6;
+  transition:background 0.3s,color 0.3s;
+}
 
-    .logo { font-size: 48px; margin-bottom: 16px; }
+nav{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.75rem 2rem;
+  background:var(--nav-bg);
+  border-bottom:1px solid var(--border2);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+.nav-logo{height:20px;opacity:0.9}
+[data-theme="light"] .nav-logo{filter:invert(1)}
+.nav-right{display:flex;align-items:center;gap:1.25rem}
+.nav-right a{color:var(--dim);font-size:13px;text-decoration:none;transition:color 0.2s}
+.nav-right a:hover{color:var(--fg)}
+.toggle-btn{
+  background:none;border:1px solid var(--border);border-radius:6px;
+  width:30px;height:30px;display:grid;place-items:center;
+  cursor:pointer;font-size:14px;color:var(--fg);transition:border-color 0.2s;
+}
+.toggle-btn:hover{border-color:var(--accent-bright)}
 
-    h1 {
-      font-size: 36px;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--accent2), #22d3ee);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 12px;
-    }
+.hero{max-width:800px;margin:0 auto;padding:5rem 1.5rem 3rem;text-align:center}
+.ascii-wrap{display:inline-block;margin-bottom:1.5rem}
+.ascii-block{
+  color:var(--ascii-color);
+  font-family:'SF Mono','Cascadia Code','Fira Code','JetBrains Mono',monospace;
+  font-size:clamp(0.25rem,0.75vw,0.55rem);
+  line-height:1.1;white-space:pre;text-align:left;
+  text-shadow:var(--ascii-glow);
+}
+.hero-sub{font-size:17px;color:var(--fg2);max-width:520px;margin:0 auto 2.5rem;line-height:1.7;font-weight:300}
 
-    .tagline { font-size: 18px; color: var(--text2); max-width: 500px; margin: 0 auto; }
+.term{
+  max-width:560px;margin:0 auto 1.5rem;
+  border:1px solid var(--border);border-radius:12px;overflow:hidden;
+  background:var(--surface);
+}
+.term-bar{display:flex;align-items:center;gap:6px;padding:0.6rem 1rem;background:var(--bg2);border-bottom:1px solid var(--border2)}
+.term-dot{width:10px;height:10px;border-radius:50%;background:rgba(128,128,128,0.15);border:1px solid var(--border)}
+.term-title{flex:1;text-align:center;font-size:11px;color:var(--dim);letter-spacing:0.5px;font-family:'ABC Repro Mono',monospace}
+.term-tabs{display:flex;border-bottom:1px solid var(--border2)}
+.term-tab{
+  flex:1;padding:0.5rem;font-family:inherit;font-size:13px;font-weight:500;
+  background:none;border:none;border-bottom:2px solid transparent;
+  color:var(--dim);cursor:pointer;transition:color 0.2s,border-color 0.2s;
+}
+.term-tab:hover{color:var(--fg2)}
+.term-tab.on{color:var(--accent-fg);border-bottom-color:var(--accent-bright)}
+.term-body{padding:1rem 1.25rem}
+.term-line{
+  font-family:'ABC Repro Mono',monospace;font-size:13px;color:var(--fg2);cursor:pointer;
+  padding:0.5rem 0.75rem;border-radius:6px;transition:background 0.15s;display:block;width:100%;
+}
+.term-line:hover{background:var(--glow)}
+.term-line.copied{color:var(--accent-bright)}
+.term-pane{display:none}
+.term-pane.on{display:block}
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      background: rgba(34, 197, 94, 0.1);
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      border-radius: 20px;
-      font-size: 13px;
-      color: var(--green);
-      margin-top: 20px;
-    }
+.content{max-width:800px;margin:0 auto;padding:0 1.5rem 4rem}
+.section-head{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:3px;color:var(--accent-bright);margin-bottom:1.25rem}
 
-    .badge::before { content: ''; width: 8px; height: 8px; background: var(--green); border-radius: 50%; }
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:3.5rem}
+.card{
+  background:var(--surface);border:1px solid var(--border2);border-radius:10px;
+  padding:1.25rem;text-align:left;
+  transition:border-color 0.25s,transform 0.25s,box-shadow 0.25s;
+}
+.card:hover{border-color:var(--border);transform:translateY(-2px);box-shadow:0 8px 32px var(--glow)}
+.card-title{font-size:14px;font-weight:600;color:var(--fg);margin-bottom:0.3rem}
+.card-desc{font-size:12px;color:var(--dim);line-height:1.6;font-weight:300}
 
-    .install-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px 24px;
-      margin: 40px 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
+.agents{display:flex;align-items:center;justify-content:center;gap:0.6rem;flex-wrap:wrap;margin-bottom:3rem}
+.agent-pill{
+  font-size:12px;color:var(--dim);background:var(--surface);
+  border:1px solid var(--border2);border-radius:99px;padding:0.35rem 0.85rem;
+  transition:border-color 0.2s,color 0.2s;
+}
+.agent-pill:hover{border-color:var(--border);color:var(--fg2)}
 
-    .install-box code {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 15px;
-      color: var(--accent2);
-    }
+.mcp-section{margin-bottom:3.5rem}
+.mcp-config{background:var(--surface);border:1px solid var(--border2);border-radius:12px;overflow:hidden;margin-bottom:1.5rem}
+.mcp-config-header{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1rem;background:var(--bg2);border-bottom:1px solid var(--border2)}
+.mcp-config-title{font-size:12px;color:var(--dim);font-family:'ABC Repro Mono',monospace}
+.mcp-config-copy{
+  background:none;border:1px solid var(--border);border-radius:6px;
+  padding:0.25rem 0.6rem;font-size:11px;color:var(--dim);cursor:pointer;
+  transition:border-color 0.2s,color 0.2s;font-family:inherit;
+}
+.mcp-config-copy:hover{border-color:var(--accent-bright);color:var(--fg)}
+.mcp-config pre{padding:1rem 1.25rem;font-family:'ABC Repro Mono',monospace;font-size:12px;color:var(--fg2);line-height:1.6;margin:0}
+.mcp-tools{display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem}
+.mcp-tool{background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:0.75rem 1rem;transition:border-color 0.2s}
+.mcp-tool:hover{border-color:var(--border)}
+.mcp-tool-name{font-family:'ABC Repro Mono',monospace;font-size:12px;color:var(--accent-bright);margin-bottom:0.2rem}
+.mcp-tool-desc{font-size:11px;color:var(--dim)}
 
-    .install-box button {
-      padding: 8px 16px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 13px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
+footer{max-width:800px;margin:0 auto;padding:2rem 1.5rem;border-top:1px solid var(--border2);text-align:center}
+footer a{color:var(--dim);font-size:13px;text-decoration:none;transition:color 0.2s}
+footer a:hover{color:var(--fg2)}
+.foot-links{display:flex;justify-content:center;gap:2rem;margin-bottom:0.6rem}
+.foot-copy{font-size:11px;color:var(--dim);opacity:0.5}
 
-    .install-box button:hover { background: #4f46e5; }
+.warn-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:grid;place-items:center;padding:1.5rem;backdrop-filter:blur(8px)}
+.warn-overlay.off{display:none}
+.warn-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;max-width:420px;width:100%;padding:2rem;text-align:center;animation:pop 0.25s ease}
+@keyframes pop{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+.warn-box h3{color:var(--accent-bright);font-size:12px;text-transform:uppercase;letter-spacing:2px;margin-bottom:0.75rem;font-weight:500}
+.warn-box p{font-size:13px;color:var(--fg2);line-height:1.7;margin-bottom:1.5rem;font-weight:300}
+.warn-box button{width:100%;background:var(--accent);border:1px solid var(--border);color:#B8AEE0;font-family:inherit;font-size:13px;font-weight:500;padding:0.6rem;border-radius:6px;cursor:pointer;transition:background 0.2s}
+.warn-box button:hover{background:#230F8A}
+[data-theme="light"] .warn-box button{color:#fff}
 
-    section { margin-bottom: 48px; }
-
-    h2 {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .clients {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-    }
-
-    .client {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
-      text-align: center;
-      transition: border-color 0.15s;
-    }
-
-    .client:hover { border-color: var(--accent); }
-
-    .client .icon { font-size: 28px; margin-bottom: 8px; }
-    .client .name { font-size: 14px; font-weight: 500; }
-
-    .config-block {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .config-header {
-      padding: 12px 16px;
-      background: var(--surface2);
-      border-bottom: 1px solid var(--border);
-      font-size: 13px;
-      color: var(--text2);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .config-header button {
-      padding: 4px 10px;
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text2);
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .config-header button:hover { border-color: var(--accent); color: var(--text); }
-
-    pre {
-      padding: 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      line-height: 1.6;
-      overflow-x: auto;
-    }
-
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 12px;
-    }
-
-    .tool {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 16px;
-    }
-
-    .tool-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      color: var(--accent2);
-      margin-bottom: 4px;
-    }
-
-    .tool-desc { font-size: 13px; color: var(--text2); }
-
-    .prereq {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-    }
-
-    .prereq code {
-      display: block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      color: var(--text);
-      margin: 8px 0;
-      padding: 10px 14px;
-      background: var(--surface2);
-      border-radius: 6px;
-    }
-
-    .prereq p { font-size: 14px; color: var(--text2); margin-bottom: 12px; }
-
-    footer {
-      text-align: center;
-      padding: 40px 0;
-      border-top: 1px solid var(--border);
-      color: var(--text2);
-      font-size: 14px;
-    }
-
-    footer a { color: var(--accent2); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-
-    @media (max-width: 600px) {
-      h1 { font-size: 28px; }
-      .install-box { flex-direction: column; text-align: center; }
-    }
-  </style>
+@media(max-width:600px){
+  nav{padding:0.5rem 1rem}
+  .hero{padding:3rem 1rem 2rem}
+  .ascii-block{font-size:0.16rem}
+  .cards{grid-template-columns:1fr 1fr}
+  .mcp-tools{grid-template-columns:1fr}
+  .content{padding:0 1rem 2.5rem}
+}
+@media(max-width:380px){.cards{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="logo">⚡</div>
-      <h1>eigen-skills</h1>
-      <p class="tagline">MCP Server for EigenCompute TEE — Deploy apps to hardware-isolated enclaves from any AI assistant</p>
-      <div class="badge">v2.1.0 on npm</div>
-    </header>
 
-    <div class="install-box">
-      <code>npm install -g eigen-skills</code>
-      <button onclick="copy('npm install -g eigen-skills')">Copy</button>
+<nav>
+  <img src="assets/lockup.png" alt="EigenCloud" class="nav-logo">
+  <div class="nav-right">
+    <a href="https://github.com/zeeshan8281/eigencloud-skills" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/eigen-skills" target="_blank">npm</a>
+    <button class="toggle-btn" id="toggle"><span id="toggle-icon"></span></button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="ascii-wrap"><pre class="ascii-block">
+ ███████╗ ██╗  ██████╗  ███████╗ ███╗   ██╗  ██████╗ ██╗      ██████╗  ██╗   ██╗ ██████╗
+ ██╔════╝ ██║ ██╔════╝  ██╔════╝ ████╗  ██║ ██╔════╝ ██║     ██╔═══██╗ ██║   ██║ ██╔══██╗
+ █████╗   ██║ ██║  ███╗ █████╗   ██╔██╗ ██║ ██║      ██║     ██║   ██║ ██║   ██║ ██║  ██║
+ ██╔══╝   ██║ ██║   ██║ ██╔══╝   ██║╚██╗██║ ██║      ██║     ██║   ██║ ██║   ██║ ██║  ██║
+ ███████╗ ██║ ╚██████╔╝ ███████╗ ██║ ╚████║ ╚██████╗ ███████╗╚██████╔╝ ╚██████╔╝ ██████╔╝
+ ╚══════╝ ╚═╝  ╚═════╝  ╚══════╝ ╚═╝  ╚═══╝  ╚═════╝ ╚══════╝ ╚═════╝   ╚═════╝  ╚═════╝
+
+ ███████╗ ██╗  ██╗ ██╗ ██╗      ██╗      ███████╗
+ ██╔════╝ ██║ ██╔╝ ██║ ██║      ██║      ██╔════╝
+ ███████╗ █████╔╝  ██║ ██║      ██║      ███████╗
+ ╚════██║ ██╔═██╗  ██║ ██║      ██║      ╚════██║
+ ███████║ ██║  ██╗ ██║ ███████╗ ███████╗ ███████║
+ ╚══════╝ ╚═╝  ╚═╝ ╚═╝ ╚══════╝ ╚══════╝ ╚══════╝</pre></div>
+
+  <p class="hero-sub">Deploy to <strong>hardware-isolated TEEs</strong> on EigenCloud. Encrypted memory, sealed secrets, cryptographic attestation. Just tell your agent.</p>
+
+  <div class="term">
+    <div class="term-bar">
+      <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+      <span class="term-title">terminal</span>
     </div>
-
-    <section>
-      <h2>🤖 Works with</h2>
-      <div class="clients">
-        <div class="client"><div class="icon">▲</div><div class="name">Cursor</div></div>
-        <div class="client"><div class="icon">◉</div><div class="name">Claude Desktop</div></div>
-        <div class="client"><div class="icon">◇</div><div class="name">Cline</div></div>
-        <div class="client"><div class="icon">◈</div><div class="name">Continue</div></div>
-        <div class="client"><div class="icon">⬡</div><div class="name">Zed</div></div>
-        <div class="client"><div class="icon">✧</div><div class="name">Any MCP Client</div></div>
+    <div class="term-tabs">
+      <button class="term-tab on" data-pane="pkg">Install</button>
+      <button class="term-tab" data-pane="prompt">Tell your Agent</button>
+    </div>
+    <div class="term-body">
+      <div class="term-pane on" data-pane="pkg">
+        <span class="term-line" data-copy="npm install -g eigen-skills">$ npm install -g eigen-skills</span>
       </div>
-    </section>
+      <div class="term-pane" data-pane="prompt">
+        <span class="term-line" data-copy="Read https://eigencloud-skills.vercel.app/ and deploy my app to eigencompute">"Read https://eigencloud-skills.vercel.app/ and deploy my app to eigencompute"</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <section>
-      <h2>⚙️ Setup</h2>
-      <div class="config-block">
-        <div class="config-header">
-          <span>~/.cursor/mcp.json or claude_desktop_config.json</span>
-          <button onclick="copyConfig()">Copy</button>
-        </div>
-        <pre id="config">{
+<div class="content">
+  <div class="section-head">What you get</div>
+  <div class="cards">
+    <div class="card"><div class="card-title">Encrypted Memory</div><div class="card-desc">Hardware-enforced isolation via Intel TDX / SEV-SNP enclaves</div></div>
+    <div class="card"><div class="card-title">Unique Wallet</div><div class="card-desc">Cryptographic identity generated per deployment</div></div>
+    <div class="card"><div class="card-title">KMS Signing</div><div class="card-desc">Managed key infrastructure inside the enclave</div></div>
+    <div class="card"><div class="card-title">Sealed Secrets</div><div class="card-desc">Encrypted at rest, decrypted only inside the TEE</div></div>
+    <div class="card"><div class="card-title">Attestation</div><div class="card-desc">Cryptographic proof of code integrity</div></div>
+    <div class="card"><div class="card-title">Isolation</div><div class="card-desc">Separate compute per workload, zero shared state</div></div>
+  </div>
+
+  <div class="section-head">Works with</div>
+  <div class="agents">
+    <span class="agent-pill">Claude Code</span>
+    <span class="agent-pill">Cursor</span>
+    <span class="agent-pill">Claude Desktop</span>
+    <span class="agent-pill">Cline</span>
+    <span class="agent-pill">Codex CLI</span>
+    <span class="agent-pill">Kiro</span>
+    <span class="agent-pill">OpenCode</span>
+  </div>
+
+  <div class="section-head">MCP Server Setup</div>
+  <div class="mcp-section">
+    <div class="mcp-config">
+      <div class="mcp-config-header">
+        <span class="mcp-config-title">~/.cursor/mcp.json or claude_desktop_config.json</span>
+        <button class="mcp-config-copy" onclick="copyMcp()">Copy</button>
+      </div>
+      <pre id="mcp-json">{
   "mcpServers": {
     "eigencompute": {
       "command": "eigen-mcp"
     }
   }
 }</pre>
-      </div>
-    </section>
-
-    <section>
-      <h2>🔧 Available Tools</h2>
-      <div class="tools-grid">
-        <div class="tool">
-          <div class="tool-name">eigencompute_deploy</div>
-          <div class="tool-desc">Deploy Docker image to TEE</div>
-        </div>
-        <div class="tool">
-          <div class="tool-name">eigencompute_list</div>
-          <div class="tool-desc">List all deployed apps</div>
-        </div>
-        <div class="tool">
-          <div class="tool-name">eigencompute_info</div>
-          <div class="tool-desc">Get app status and IP</div>
-        </div>
-        <div class="tool">
-          <div class="tool-name">eigencompute_logs</div>
-          <div class="tool-desc">View app logs</div>
-        </div>
-        <div class="tool">
-          <div class="tool-name">eigencompute_start</div>
-          <div class="tool-desc">Start stopped app</div>
-        </div>
-        <div class="tool">
-          <div class="tool-name">eigencompute_stop</div>
-          <div class="tool-desc">Stop running app</div>
-        </div>
-        <div class="tool">
-          <div class="tool-name">eigencompute_terminate</div>
-          <div class="tool-desc">Destroy app permanently</div>
-        </div>
-        <div class="tool">
-          <div class="tool-name">eigencompute_env_set</div>
-          <div class="tool-desc">Set sealed secrets</div>
-        </div>
-        <div class="tool">
-          <div class="tool-name">eigencompute_upgrade</div>
-          <div class="tool-desc">Upgrade running app</div>
-        </div>
-        <div class="tool">
-          <div class="tool-name">eigencompute_whoami</div>
-          <div class="tool-desc">Check CLI auth status</div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <h2>📋 Prerequisites</h2>
-      <div class="prereq">
-        <p>Install and authenticate the ecloud CLI:</p>
-        <code>npm install -g @layr-labs/ecloud-cli@latest</code>
-        <code>ecloud auth login</code>
-        <code>ecloud auth whoami</code>
-      </div>
-    </section>
-
-    <footer>
-      Built for <a href="https://eigencloud.xyz">EigenCompute</a> TEE
-      &nbsp;·&nbsp;
-      <a href="https://github.com/zeeshan8281/eigencloud-skills">GitHub</a>
-      &nbsp;·&nbsp;
-      <a href="https://www.npmjs.com/package/eigen-skills">npm</a>
-    </footer>
+    </div>
+    <div class="mcp-tools">
+      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_deploy</div><div class="mcp-tool-desc">Deploy Docker image to TEE</div></div>
+      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_list</div><div class="mcp-tool-desc">List all deployed apps</div></div>
+      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_info</div><div class="mcp-tool-desc">Get app status and IP</div></div>
+      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_logs</div><div class="mcp-tool-desc">View app logs</div></div>
+      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_start</div><div class="mcp-tool-desc">Start stopped app</div></div>
+      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_stop</div><div class="mcp-tool-desc">Stop running app</div></div>
+      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_terminate</div><div class="mcp-tool-desc">Destroy app permanently</div></div>
+      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_env_set</div><div class="mcp-tool-desc">Set sealed secrets</div></div>
+    </div>
   </div>
+</div>
 
-  <script>
-    function copy(text) {
-      navigator.clipboard.writeText(text);
-    }
-    function copyConfig() {
-      const config = document.getElementById('config').textContent;
-      navigator.clipboard.writeText(config);
-    }
-  </script>
+<footer>
+  <div class="foot-links">
+    <a href="https://github.com/zeeshan8281/eigencloud-skills" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/eigen-skills" target="_blank">npm</a>
+    <a href="https://eigencloud.xyz" target="_blank">EigenCloud</a>
+  </div>
+  <div class="foot-copy">MIT License</div>
+</footer>
+
+<div id="warn" class="warn-overlay">
+  <div class="warn-box">
+    <h3>Notice</h3>
+    <p>TEE deployments provide hardware-level isolation but are not a substitute for comprehensive security audits. Always verify attestation reports independently.</p>
+    <button id="warn-ok">I understand</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var h=document.documentElement,tb=document.getElementById('toggle'),ti=document.getElementById('toggle-icon');
+  function setTheme(t){h.dataset.theme=t;ti.textContent=t==='dark'?'\u2600':'\u263E';localStorage.setItem('ec-theme',t)}
+  var saved=localStorage.getItem('ec-theme');
+  if(saved)setTheme(saved);
+  else if(matchMedia('(prefers-color-scheme:light)').matches)setTheme('light');
+  else setTheme('dark');
+  tb.onclick=function(){setTheme(h.dataset.theme==='dark'?'light':'dark')};
+
+  var wo=document.getElementById('warn');
+  if(sessionStorage.getItem('ec-warn'))wo.classList.add('off');
+  document.getElementById('warn-ok').onclick=function(){wo.classList.add('off');sessionStorage.setItem('ec-warn','1')};
+
+  document.querySelectorAll('.term-tab').forEach(function(btn){
+    btn.onclick=function(){
+      var p=btn.dataset.pane;
+      document.querySelectorAll('.term-tab').forEach(function(b){b.classList.remove('on')});
+      document.querySelectorAll('.term-pane').forEach(function(v){v.classList.remove('on')});
+      btn.classList.add('on');
+      document.querySelector('.term-pane[data-pane="'+p+'"]').classList.add('on');
+    };
+  });
+
+  document.querySelectorAll('[data-copy]').forEach(function(el){
+    var orig=el.textContent,tmr;
+    el.onclick=function(){
+      try{navigator.clipboard.writeText(el.dataset.copy)}catch(e){var t=document.createElement('textarea');t.value=el.dataset.copy;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t)}
+      clearTimeout(tmr);el.classList.add('copied');el.textContent='Copied!';
+      tmr=setTimeout(function(){el.textContent=orig;el.classList.remove('copied')},1200);
+    };
+  });
+
+  var cards=document.querySelectorAll('.card');
+  var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}})},{threshold:0.1});
+  cards.forEach(function(c){c.style.opacity='0';c.style.transform='translateY(16px)';c.style.transition='opacity 0.5s,transform 0.5s';obs.observe(c)});
+})();
+
+function copyMcp(){
+  var t=document.getElementById('mcp-json').textContent;
+  navigator.clipboard.writeText(t);
+  var btn=document.querySelector('.mcp-config-copy');
+  btn.textContent='Copied!';
+  setTimeout(function(){btn.textContent='Copy'},1200);
+}
+</script>
 </body>
 </html>
