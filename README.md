@@ -1,22 +1,73 @@
 # eigen-skills
 
-**EigenCompute Agent Skill — Deploy and manage apps in Trusted Execution Environments (TEE) with one command**
+**EigenCompute MCP Server & Agent Skill — Deploy and manage apps in Trusted Execution Environments (TEE)**
 
 ---
 
 ## What is this?
 
-**eigen-skills** gives AI agents (Claude Code, OpenClaw, etc.) the ability to deploy and manage apps on [EigenCompute](https://eigencloud.xyz) — hardware-isolated TEEs powered by Intel TDX with encrypted secrets and cryptographic attestation.
+**eigen-skills** gives AI agents the ability to deploy and manage apps on [EigenCompute](https://eigencloud.xyz) — hardware-isolated TEEs powered by Intel TDX with encrypted secrets and cryptographic attestation.
+
+Works with:
+- **MCP Clients** — Cursor, Claude Desktop, Antigravity, Cline, etc.
+- **Claude Code** — via SKILL.md standard
 
 ```bash
 npm install -g eigen-skills@latest
 ```
 
-> Install once, then any compatible AI agent can deploy to EigenCompute automatically via the `SKILL.md` standard.
+---
+
+## MCP Server Setup (Cursor, Claude Desktop, etc.)
+
+### 1. Install
+
+```bash
+npm install -g eigen-skills
+```
+
+### 2. Configure your MCP client
+
+**Cursor** (`~/.cursor/mcp.json`):
+```json
+{
+  "mcpServers": {
+    "eigencompute": {
+      "command": "eigen-mcp"
+    }
+  }
+}
+```
+
+**Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "eigencompute": {
+      "command": "eigen-mcp"
+    }
+  }
+}
+```
+
+### 3. Available MCP Tools
+
+| Tool | Description |
+|------|-------------|
+| `eigencompute_deploy` | Deploy Docker image to TEE |
+| `eigencompute_list` | List all deployed apps |
+| `eigencompute_info` | Get app status, IP, details |
+| `eigencompute_logs` | View app logs |
+| `eigencompute_start` | Start stopped app |
+| `eigencompute_stop` | Stop running app |
+| `eigencompute_terminate` | Destroy app permanently |
+| `eigencompute_whoami` | Check CLI auth status |
+| `eigencompute_env_set` | Set sealed secrets |
+| `eigencompute_upgrade` | Upgrade running app |
 
 ---
 
-## Setup
+## Prerequisites
 
 ```bash
 npm install -g @layr-labs/ecloud-cli@latest   # minimum v0.4.3

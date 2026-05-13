@@ -1,8 +1,12 @@
 {
     "name": "eigen-skills",
-    "version": "2.0.3",
-    "description": "Deploy and manage apps on EigenCompute TEE — trusted execution environments with hardware-level isolation, encrypted secrets, and attestation",
+    "version": "2.1.0",
+    "description": "Deploy and manage apps on EigenCompute TEE — trusted execution environments with hardware-level isolation, encrypted secrets, and attestation. Works as MCP server for Cursor/Claude Desktop or as Claude Code skill.",
     "main": "index.js",
+    "bin": {
+        "eigen-mcp": "./bin/eigen-mcp.js",
+        "eigencompute": "./bin/eigen-mcp.js"
+    },
     "agents": {
         "skills": "skills/"
     },
@@ -10,22 +14,26 @@
         "postinstall": "node scripts/postinstall.js",
         "test": "node scripts/test-all.js",
         "demo": "node scripts/demo.js",
-        "ui": "node server.js"
+        "ui": "node server.js",
+        "mcp": "node src/mcp-server.js"
     },
     "keywords": [
+        "mcp",
+        "mcp-server",
+        "model-context-protocol",
         "eigenlayer",
-        "eigen",
-        "restaking",
-        "avs",
+        "eigencompute",
+        "tee",
         "agent-skills",
         "ai-agent",
         "claude",
-        "openclaw",
-        "eigenexplorer"
+        "cursor",
+        "antigravity"
     ],
     "author": "zeeshan8281",
     "license": "MIT",
     "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.29.0",
         "axios": "^1.7.0",
         "dotenv": "^17.3.1",
         "express": "^5.2.1",
