@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eigen-skills — EigenCompute MCP Server</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface2: #1a1a25;
+      --border: #2a2a3a;
+      --text: #e8e8f0;
+      --text2: #8888a0;
+      --accent: #6366f1;
+      --accent2: #818cf8;
+      --green: #22c55e;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 60px 24px; }
+
+    header { text-align: center; margin-bottom: 60px; }
+
+    .logo { font-size: 48px; margin-bottom: 16px; }
+
+    h1 {
+      font-size: 36px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent2), #22d3ee);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    .tagline { font-size: 18px; color: var(--text2); max-width: 500px; margin: 0 auto; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--green);
+      margin-top: 20px;
+    }
+
+    .badge::before { content: ''; width: 8px; height: 8px; background: var(--green); border-radius: 50%; }
+
+    .install-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 40px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .install-box code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      color: var(--accent2);
+    }
+
+    .install-box button {
+      padding: 8px 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .install-box button:hover { background: #4f46e5; }
+
+    section { margin-bottom: 48px; }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .clients {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .client {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      transition: border-color 0.15s;
+    }
+
+    .client:hover { border-color: var(--accent); }
+
+    .client .icon { font-size: 28px; margin-bottom: 8px; }
+    .client .name { font-size: 14px; font-weight: 500; }
+
+    .config-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .config-header {
+      padding: 12px 16px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .config-header button {
+      padding: 4px 10px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text2);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .config-header button:hover { border-color: var(--accent); color: var(--text); }
+
+    pre {
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+    }
+
+    .tool {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .tool-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--accent2);
+      margin-bottom: 4px;
+    }
+
+    .tool-desc { font-size: 13px; color: var(--text2); }
+
+    .prereq {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .prereq code {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--text);
+      margin: 8px 0;
+      padding: 10px 14px;
+      background: var(--surface2);
+      border-radius: 6px;
+    }
+
+    .prereq p { font-size: 14px; color: var(--text2); margin-bottom: 12px; }
+
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      color: var(--text2);
+      font-size: 14px;
+    }
+
+    footer a { color: var(--accent2); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 28px; }
+      .install-box { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">⚡</div>
+      <h1>eigen-skills</h1>
+      <p class="tagline">MCP Server for EigenCompute TEE — Deploy apps to hardware-isolated enclaves from any AI assistant</p>
+      <div class="badge">v2.1.0 on npm</div>
+    </header>
+
+    <div class="install-box">
+      <code>npm install -g eigen-skills</code>
+      <button onclick="copy('npm install -g eigen-skills')">Copy</button>
+    </div>
+
+    <section>
+      <h2>🤖 Works with</h2>
+      <div class="clients">
+        <div class="client"><div class="icon">▲</div><div class="name">Cursor</div></div>
+        <div class="client"><div class="icon">◉</div><div class="name">Claude Desktop</div></div>
+        <div class="client"><div class="icon">◇</div><div class="name">Cline</div></div>
+        <div class="client"><div class="icon">◈</div><div class="name">Continue</div></div>
+        <div class="client"><div class="icon">⬡</div><div class="name">Zed</div></div>
+        <div class="client"><div class="icon">✧</div><div class="name">Any MCP Client</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>⚙️ Setup</h2>
+      <div class="config-block">
+        <div class="config-header">
+          <span>~/.cursor/mcp.json or claude_desktop_config.json</span>
+          <button onclick="copyConfig()">Copy</button>
+        </div>
+        <pre id="config">{
+  "mcpServers": {
+    "eigencompute": {
+      "command": "eigen-mcp"
+    }
+  }
+}</pre>
+      </div>
+    </section>
+
+    <section>
+      <h2>🔧 Available Tools</h2>
+      <div class="tools-grid">
+        <div class="tool">
+          <div class="tool-name">eigencompute_deploy</div>
+          <div class="tool-desc">Deploy Docker image to TEE</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">eigencompute_list</div>
+          <div class="tool-desc">List all deployed apps</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">eigencompute_info</div>
+          <div class="tool-desc">Get app status and IP</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">eigencompute_logs</div>
+          <div class="tool-desc">View app logs</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">eigencompute_start</div>
+          <div class="tool-desc">Start stopped app</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">eigencompute_stop</div>
+          <div class="tool-desc">Stop running app</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">eigencompute_terminate</div>
+          <div class="tool-desc">Destroy app permanently</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">eigencompute_env_set</div>
+          <div class="tool-desc">Set sealed secrets</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">eigencompute_upgrade</div>
+          <div class="tool-desc">Upgrade running app</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">eigencompute_whoami</div>
+          <div class="tool-desc">Check CLI auth status</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>📋 Prerequisites</h2>
+      <div class="prereq">
+        <p>Install and authenticate the ecloud CLI:</p>
+        <code>npm install -g @layr-labs/ecloud-cli@latest</code>
+        <code>ecloud auth login</code>
+        <code>ecloud auth whoami</code>
+      </div>
+    </section>
+
+    <footer>
+      Built for <a href="https://eigencloud.xyz">EigenCompute</a> TEE
+      &nbsp;·&nbsp;
+      <a href="https://github.com/zeeshan8281/eigencloud-skills">GitHub</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.npmjs.com/package/eigen-skills">npm</a>
+    </footer>
+  </div>
+
+  <script>
+    function copy(text) {
+      navigator.clipboard.writeText(text);
+    }
+    function copyConfig() {
+      const config = document.getElementById('config').textContent;
+      navigator.clipboard.writeText(config);
+    }
+  </script>
+</body>
+</html>
