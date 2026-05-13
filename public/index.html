@@ -209,11 +209,20 @@ footer a:hover{color:var(--fg2)}
     </div>
     <div class="term-tabs">
       <button class="term-tab on" data-pane="pkg">Install</button>
+      <button class="term-tab" data-pane="mcp">MCP Setup</button>
       <button class="term-tab" data-pane="prompt">Tell your Agent</button>
     </div>
     <div class="term-body">
       <div class="term-pane on" data-pane="pkg">
         <span class="term-line" data-copy="npm install -g eigen-skills">$ npm install -g eigen-skills</span>
+      </div>
+      <div class="term-pane" data-pane="mcp">
+        <span class="term-line" data-copy='{"mcpServers":{"eigencompute":{"command":"eigen-mcp"}}}'>{
+  "mcpServers": {
+    "eigencompute": { "command": "eigen-mcp" }
+  }
+}</span>
+        <div style="font-size:11px;color:var(--dim);margin-top:0.5rem;padding:0 0.75rem">Add to ~/.cursor/mcp.json or claude_desktop_config.json</div>
       </div>
       <div class="term-pane" data-pane="prompt">
         <span class="term-line" data-copy="Read https://eigencloud-skills.vercel.app/ and deploy my app to eigencompute">"Read https://eigencloud-skills.vercel.app/ and deploy my app to eigencompute"</span>
