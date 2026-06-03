@@ -5,11 +5,10 @@ node_modules/
 .git/
 .claude/
 .dockerignore
-Dockerfile
-entrypoint.sh
+
+# Landing page + deploy config — not part of the npm package
+public/
+vercel.json
+Dockerfile.mcp
+railway.json
 DEPLOY.md
-server.js
-ui/
-eigen-mcp/
-scripts/test-mcp.js
-mcp.js

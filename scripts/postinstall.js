@@ -32,8 +32,8 @@ try {
     fs.mkdirSync(destDir, { recursive: true });
     fs.copyFileSync(src, dest);
     console.log('\n⚡ eigen-skills: SKILL.md installed to .claude/skills/eigen/');
-    console.log('  Claude Code can now query live EigenLayer data.');
-    console.log('  Set your API key: export EIGEN_API_KEY="your-key"\n');
+    console.log('  Claude Code can now deploy & manage apps on EigenCompute TEE.');
+    console.log('  Install the CLI: npm install -g @layr-labs/ecloud-cli@latest\n');
 } catch (err) {
     // Silent fail — don't break the user's install
 }

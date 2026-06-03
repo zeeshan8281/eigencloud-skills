@@ -1,0 +1,18 @@
+# MCP HTTP transport for web IDEs — deployed to Railway/Render/etc.
+# NOTE: intentionally does NOT install or auth the ecloud CLI. Tool *execution*
+# requires the operator's private key and must stay on a trusted local host.
+# This image exposes the MCP transport (initialize, tools/list) over public HTTPS
+# so web IDEs can connect; tool calls return "ecloud CLI not installed" by design.
+FROM node:22-bullseye-slim
+
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+# --ignore-scripts: skip the repo's postinstall (needs scripts/, not copied yet,
+# and not required for the MCP server runtime). --omit=dev: production deps only.
+RUN npm install --omit=dev --ignore-scripts
+
+COPY . .
+
+# Railway injects PORT at runtime; http-server.js reads process.env.PORT.
+CMD ["node", "src/http-server.js"]

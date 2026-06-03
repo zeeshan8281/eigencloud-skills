@@ -50,20 +50,32 @@ npm install -g eigen-skills
 }
 ```
 
-### 3. Available MCP Tools
+### 3. Available MCP Tools (12)
 
 | Tool | Description |
 |------|-------------|
 | `eigencompute_deploy` | Deploy Docker image to TEE |
+| `eigencompute_verify` ✦ | Reconcile on-chain image digest vs. source provenance (proves what's running) |
+| `eigencompute_init_verifiable` ✦ | Scaffold a provenance-signed CI build pipeline |
+| `eigencompute_upgrade` | Upgrade running app to a new image |
 | `eigencompute_list` | List all deployed apps |
 | `eigencompute_info` | Get app status, IP, details |
 | `eigencompute_logs` | View app logs |
+| `eigencompute_env_set` | Set sealed secrets |
 | `eigencompute_start` | Start stopped app |
 | `eigencompute_stop` | Stop running app |
 | `eigencompute_terminate` | Destroy app permanently |
 | `eigencompute_whoami` | Check CLI auth status |
-| `eigencompute_env_set` | Set sealed secrets |
-| `eigencompute_upgrade` | Upgrade running app |
+
+✦ new in v3.
+
+### Remote MCP (for web IDEs)
+
+The server also runs over HTTP so remote / web-based IDE clients can connect by URL instead of spawning a local process:
+
+```bash
+eigen-mcp-http              # Streamable HTTP + SSE on :3333 (set MCP_AUTH_TOKEN to require a bearer token)
+```
 
 ---
 

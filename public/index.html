@@ -146,6 +146,22 @@ nav{
 .mcp-tool-name{font-family:'ABC Repro Mono',monospace;font-size:12px;color:var(--accent-bright);margin-bottom:0.2rem}
 .mcp-tool-desc{font-size:11px;color:var(--dim)}
 
+.changelog{margin-bottom:3.5rem}
+.cl-entry{position:relative;padding-left:1.5rem;border-left:1px solid var(--border);padding-bottom:1.75rem}
+.cl-entry:last-child{padding-bottom:0;border-left-color:transparent}
+.cl-entry::before{content:'';position:absolute;left:-5px;top:3px;width:9px;height:9px;border-radius:50%;background:var(--accent-bright);box-shadow:0 0 0 4px var(--bg)}
+.cl-ver{display:flex;align-items:baseline;gap:0.6rem;margin-bottom:0.7rem;flex-wrap:wrap}
+.cl-badge{font-family:'ABC Repro Mono',monospace;font-size:12px;font-weight:600;color:var(--accent-fg);background:var(--accent);border:1px solid var(--border);border-radius:99px;padding:0.15rem 0.7rem}
+.cl-badge.now{color:#fff;background:var(--accent-bright);border-color:var(--accent-bright)}
+.cl-title{font-size:14px;font-weight:600;color:var(--fg)}
+.cl-tag{font-size:11px;color:var(--dim);font-family:'ABC Repro Mono',monospace}
+.cl-list{list-style:none;display:flex;flex-direction:column;gap:0.45rem}
+.cl-list li{font-size:12.5px;color:var(--fg2);line-height:1.6;font-weight:300;padding-left:1.1rem;position:relative}
+.cl-list li::before{content:'+';position:absolute;left:0;color:var(--accent-bright);font-weight:600}
+.cl-list li strong{color:var(--fg);font-weight:600}
+.cl-list li.soon{color:var(--dim)}
+.cl-list li.soon::before{content:'\2192';color:var(--dim)}
+
 footer{max-width:800px;margin:0 auto;padding:2rem 1.5rem;border-top:1px solid var(--border2);text-align:center}
 footer a{color:var(--dim);font-size:13px;text-decoration:none;transition:color 0.2s}
 footer a:hover{color:var(--fg2)}
@@ -178,6 +194,7 @@ footer a:hover{color:var(--fg2)}
 <nav>
   <img src="assets/lockup.png" alt="EigenCloud" class="nav-logo">
   <div class="nav-right">
+    <a href="#buildlog">Build Log</a>
     <a href="https://github.com/zeeshan8281/eigencloud-skills" target="_blank">GitHub</a>
     <a href="https://www.npmjs.com/package/eigen-skills" target="_blank">npm</a>
     <button class="toggle-btn" id="toggle"><span id="toggle-icon"></span></button>
@@ -272,14 +289,74 @@ footer a:hover{color:var(--fg2)}
     </div>
     <div class="mcp-tools">
       <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_deploy</div><div class="mcp-tool-desc">Deploy Docker image to TEE</div></div>
+      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_verify ✦</div><div class="mcp-tool-desc">Reconcile on-chain digest vs. source provenance</div></div>
+      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_init_verifiable ✦</div><div class="mcp-tool-desc">Scaffold a provenance-signed CI build</div></div>
+      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_upgrade</div><div class="mcp-tool-desc">Upgrade app to a new image</div></div>
       <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_list</div><div class="mcp-tool-desc">List all deployed apps</div></div>
       <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_info</div><div class="mcp-tool-desc">Get app status and IP</div></div>
       <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_logs</div><div class="mcp-tool-desc">View app logs</div></div>
+      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_env_set</div><div class="mcp-tool-desc">Set sealed secrets</div></div>
       <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_start</div><div class="mcp-tool-desc">Start stopped app</div></div>
       <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_stop</div><div class="mcp-tool-desc">Stop running app</div></div>
       <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_terminate</div><div class="mcp-tool-desc">Destroy app permanently</div></div>
-      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_env_set</div><div class="mcp-tool-desc">Set sealed secrets</div></div>
+      <div class="mcp-tool"><div class="mcp-tool-name">eigencompute_whoami</div><div class="mcp-tool-desc">Show authenticated address</div></div>
     </div>
+    <div style="font-size:11px;color:var(--dim);margin-top:0.75rem;text-align:center">✦ new in v3 · 12 tools total · also runs over HTTP for web IDEs (<code style="background:var(--glow);padding:2px 6px;border-radius:4px">eigen-mcp-http</code>)</div>
+  </div>
+
+  <div class="section-head" id="buildlog">Build Log</div>
+  <div class="changelog">
+
+    <div class="cl-entry">
+      <div class="cl-ver">
+        <span class="cl-badge">v1</span>
+        <span class="cl-title">Agent Skills</span>
+        <span class="cl-tag">the markdown-only beginning</span>
+      </div>
+      <ul class="cl-list">
+        <li>Shipped as pure <strong>Agent Skills</strong> — plain <strong>SKILL.md</strong> files an agent reads directly. No SDK, no dependencies, no server.</li>
+        <li><strong>Auto-discovered by Claude Code</strong> straight from the npm package via a postinstall that drops the skill into <code>.claude/skills/</code>.</li>
+        <li>Covered the EigenLayer ecosystem through the EigenExplorer API: <strong>operators, AVS, stakers, restaking positions, rewards &amp; APY, delegation &amp; registration events</strong>.</li>
+        <li>Each skill = a markdown spec + ready-to-run <strong>curl</strong> examples the agent executes itself — zero glue code, works in any agent that can read files.</li>
+        <li><em>Limitation:</em> read-only data lookups. The agent could <em>answer questions</em>, but couldn't <em>do</em> anything.</li>
+      </ul>
+    </div>
+
+    <div class="cl-entry">
+      <div class="cl-ver">
+        <span class="cl-badge">v2</span>
+        <span class="cl-title">EigenCompute focus + MCP server</span>
+        <span class="cl-tag">from reading to doing</span>
+      </div>
+      <ul class="cl-list">
+        <li><strong>Pivoted the entire package to EigenCompute TEE deployment</strong> — retired the EigenExplorer/DA data skills to go deep on one thing: shipping apps into enclaves.</li>
+        <li>Added a first-class <strong>MCP server</strong> (<code>eigen-mcp</code>) over stdio — installs as a real tool provider in <strong>Cursor, Claude Desktop, Cline, Codex CLI</strong> and any MCP client.</li>
+        <li><strong>10 lifecycle tools</strong>: <code>deploy</code>, <code>list</code>, <code>info</code>, <code>logs</code>, <code>start</code>, <code>stop</code>, <code>terminate</code>, <code>upgrade</code>, <code>env_set</code>, <code>whoami</code>.</li>
+        <li>Wraps <code>@layr-labs/ecloud-cli</code> <strong>non-interactively</strong> — collapses 6+ interactive prompts into one agent-driven call, so a full build → deploy runs hands-free.</li>
+        <li><strong>Sealed secrets</strong> — env vars encrypted client-side, decrypted only inside the TEE via KMS attestation.</li>
+        <li>Marketing site + one-paste MCP config; published to npm as <code>eigen-skills</code>.</li>
+        <li><em>Limitation:</em> you could deploy, but couldn't <em>prove</em> what was running — and it only worked from a local subprocess.</li>
+      </ul>
+    </div>
+
+    <div class="cl-entry">
+      <div class="cl-ver">
+        <span class="cl-badge now">v3.0</span>
+        <span class="cl-title">Verifiable Deployments + Remote access</span>
+        <span class="cl-tag">trust, and reach</span>
+      </div>
+      <ul class="cl-list">
+        <li><strong>eigencompute_verify</strong> — reads the <strong>block-anchored on-chain release record</strong> (<code>app releases</code>) and reconciles the deployed image digest against build provenance and your expected digest. Returns a real pass/fail, and flags hand-built "dev" images as <strong>NOT VERIFIABLE</strong>.</li>
+        <li><strong>eigencompute_init_verifiable</strong> — scaffolds a GitHub Actions pipeline that builds <code>linux/amd64</code>, pushes to your registry, and <strong>signs build provenance</strong> (source commit → image digest). Turns an unprovable dev image into one <code>verify</code> can confirm.</li>
+        <li>Together they close the loop: <strong>scaffold → deploy → verify</strong>, proving the chain <strong>source commit → signed build → on-chain record → attested TEE</strong>.</li>
+        <li><strong>Remote MCP over HTTP</strong> — new <code>eigen-mcp-http</code> server with <strong>Streamable HTTP + legacy SSE</strong> transports, so remote and web-based IDE clients connect by <strong>URL</strong>, not a local process.</li>
+        <li><strong>Bearer-token auth</strong> on the HTTP transport (CORS + public <code>/health</code> probe) for safe public hosting.</li>
+        <li><strong>12 tools total</strong>, and a leaner package — dropped the dead chat-server, duplicate landing page, and 3 unused dependencies.</li>
+        <li class="soon">Next: deploy guardrails + continuous attestation monitoring with digest-drift alerts.</li>
+        <li class="soon">Next: hosted multi-tenant server with OAuth 2.1 — zero local setup from any IDE.</li>
+      </ul>
+    </div>
+
   </div>
 </div>
 

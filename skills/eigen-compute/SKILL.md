@@ -1,7 +1,7 @@
 ---
 name: eigen-compute
 description: "Deploy and manage applications on EigenCompute TEE (Trusted Execution Environment) — deploy, monitor, attest, and manage lifecycle via ecloud CLI"
-version: 2.0.0
+version: 3.0.0
 metadata:
   emoji: "🔒"
   tags: ["eigenlayer", "eigencompute", "tee", "tdx", "deploy", "attestation"]
@@ -108,6 +108,41 @@ Secrets are encrypted and only decryptable inside the TEE via KMS attestation. A
 | `/usr/local/bin/kms-client` | KMS client binary |
 
 Verify at: `https://verify-sepolia.eigencloud.xyz/app/<APP_ID>`
+
+## Make a Build Verifiable
+
+Dev images (built locally, `docker push`ed by hand) carry **no source provenance** — `eigencompute_verify` will flag them as `NOT VERIFIABLE` because there's nothing to check the running image against. To fix that, build from source in CI so the image is digest-pinned and provenance-signed.
+
+The `eigencompute_init_verifiable` tool scaffolds this for you:
+
+```
+eigencompute_init_verifiable(image: "docker.io/user/app", dir: ".")
+```
+
+It writes `.github/workflows/eigen-verifiable-build.yml`, which:
+
+1. Builds `linux/amd64` (required by EigenCompute) and pushes to your registry.
+2. Emits **signed build provenance** (`actions/attest-build-provenance`) linking the **source commit → image digest**.
+3. Prints the digest-pinned reference (`image@sha256:…`) to deploy.
+
+Add repo secrets `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN`, push, then deploy the printed digest.
+
+## Verify a Deployment
+
+Deploying is only half the trust story — you also want proof the enclave is running the *exact* image you intended. The `eigencompute_verify` tool reads the **on-chain release record** (`ecloud compute app releases <APP_ID> --json`) — the block-anchored audit trail — and reconciles it against build provenance and your expected digest.
+
+What it checks:
+
+1. **Build is verifiable** — the release must carry source `repo`/`commit`/`provenance`. A dev image has none → reported `NOT VERIFIABLE` (run `eigencompute_init_verifiable` to fix).
+2. **On-chain digest matches expected** — pass `expectedDigest` (the `sha256:…` your CI build produced) to get a pass/fail verdict against the block-anchored digest.
+3. **Hardware attestation** — the public verifier validates the Intel TDX quote chain: `https://verify-<network>.eigencloud.xyz/app/<APP_ID>`.
+
+```bash
+# What the tool reads under the hood
+ecloud compute app releases <APP_ID> --json   # on-chain digest, registry, block, provenance
+```
+
+End-to-end trust chain: **public source commit → signed CI build (digest) → on-chain record → attested TEE**. Build verifiably so this chain is unbroken.
 
 ## Troubleshooting
 
